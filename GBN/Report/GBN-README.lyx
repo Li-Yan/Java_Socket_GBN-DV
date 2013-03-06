@@ -1,0 +1,441 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass armenian-article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.3cm
+\topmargin 3cm
+\rightmargin 2.3cm
+\bottommargin 2cm
+\headheight 1cm
+\headsep 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\align center
+
+\series bold
+\size large
+CSEE W4119 Computer Networks - PA2
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\shape italic
+Li Yan(ly2278) ly2278@columbia.edu
+\end_layout
+
+\begin_layout Part*
+
+\size large
+Go-Back-N Protocol
+\end_layout
+
+\begin_layout Section
+Building intruction
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+cd src
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+make
+\end_layout
+
+\begin_layout Standard
+Then run java program.
+\end_layout
+
+\begin_layout Section
+Document detail
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+src/
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Accessory.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Constant.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+GBN.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+gbnnode.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Receiver.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Sender.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+SenderTimerTask.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Transmission.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+makefile
+\end_layout
+
+\begin_layout Standard
+The the main function of the project is 
+\family typewriter
+\size small
+\color blue
+gbnnode.java
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Section
+Project feature
+\end_layout
+
+\begin_layout Enumerate
+Simulate the GBN protocol between two nodes.
+\end_layout
+
+\begin_layout Enumerate
+Print packet sent/received condition.
+\end_layout
+
+\begin_layout Enumerate
+Print ACK sent/received condition.
+\end_layout
+
+\begin_layout Section
+Data structure
+\end_layout
+
+\begin_layout Standard
+To realize GBN protocol, there should be a buffer, a window and a Timer.
+\end_layout
+
+\begin_layout Subsection
+Buffer
+\end_layout
+
+\begin_layout Standard
+If I simply set up a very large buffer, it will be much easy: 1) I don't
+ have to sut the sending data when buffer is not large enough to hold it
+ all; 2) I don't have to consider using buffer as a loop; 3) it will be
+ easier to solve the problem of sending termination.
+\end_layout
+
+\begin_layout Standard
+But here, in order to simulate the real condition, I set the buffer 2*window
+ size.
+ Thereby, it will be hard to use buffer:
+\end_layout
+
+\begin_layout Enumerate
+first cut sending data into small pieces, send one piece at a time and send
+ another when buffer is free.
+\end_layout
+
+\begin_layout Enumerate
+Using mod ('%' in Java) to looply use the buffer.
+\end_layout
+
+\begin_layout Enumerate
+Calculate the end (stop sending) point on the buffer, not on the data string.
+\end_layout
+
+\begin_layout Standard
+The operation on buffer is in 
+\family typewriter
+\size small
+\color blue
+Sender.Buffered_Send
+\family default
+\size default
+\color inherit
+ and 
+\family typewriter
+\size small
+\color blue
+Sender.GBN_Send
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Subsection
+Timer
+\end_layout
+
+\begin_layout Standard
+I use 
+\family typewriter
+\size small
+\color blue
+java.util.Timer
+\family default
+\size default
+\color inherit
+ and 
+\family typewriter
+\size small
+\color blue
+java.util.TimerTask
+\family default
+\size default
+\color inherit
+ here.
+ Java Timer is not easy to use.
+ No suspend, no stop, no kill, no restart.
+ What I can do is to cancel it each time a proper ACK is received, and create
+ a new one and create a new schedule for it.
+\end_layout
+
+\begin_layout Standard
+Whenever it time, I set the sending point back to the window point.
+ In this way, the sender will resend packets start at the window point.
+\end_layout
+
+\begin_layout Section
+Algorithm
+\end_layout
+
+\begin_layout Standard
+The main GBN itself does nothing, but runs two threads: 1) Sender; 2) Receiver.
+\end_layout
+
+\begin_layout Standard
+The flowchart for Sender is given in Fig 5-1:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Sender.png
+	scale 37
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Fig 5-1
+\end_layout
+
+\begin_layout Standard
+The Receiver have the flowchart of Fig 5-2:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Receiver.png
+	scale 37
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Fig 5-2
+\end_layout
+
+\begin_layout Section
+Usage scenario
+\end_layout
+
+\begin_layout Standard
+With proper run command, each process can perform both sender and receiver.
+ When all the user input has been sent out.
+ It will wait for the user's next input.
+\end_layout
+
+\begin_layout Section
+Test
+\end_layout
+
+\begin_layout Standard
+A test output is in folder 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+Test/
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+, I start up two node:
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+\size small
+\color blue
+java gbnnode 1111 2222 5 -p 0.5
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+\size small
+\color blue
+java gbnnode 2222 1111 10 -d 7
+\end_layout
+
+\begin_layout Standard
+In the test case, both node performs as sender as well as receiver.
+\end_layout
+
+\begin_layout Standard
+Fig 7-1 is the sample of timeout testing, we see it is 500ms (there will
+ be some noise caused by other thread and data exchange in the buffer):
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Test.png
+	scale 37
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Fig 7-1
+\end_layout
+
+\end_body
+\end_document

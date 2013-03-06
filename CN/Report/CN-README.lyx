@@ -1,0 +1,672 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass armenian-article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.3cm
+\topmargin 3cm
+\rightmargin 2.3cm
+\bottommargin 2cm
+\headheight 1cm
+\headsep 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\align center
+
+\series bold
+\size large
+CSEE W4119 Computer Networks - PA2
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\shape italic
+Li Yan(ly2278) ly2278@columbia.edu
+\end_layout
+
+\begin_layout Part*
+
+\size large
+Combination
+\end_layout
+
+\begin_layout Section
+Building intruction
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+cd src
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+make
+\end_layout
+
+\begin_layout Standard
+Then run java program.
+\end_layout
+
+\begin_layout Section
+Document detail
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+src/
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Accessory.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Constant.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+CN.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+cnnode.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+GBN.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Link.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Receiver.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Transmission.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+makefile
+\end_layout
+
+\begin_layout Standard
+The the main function of the project is 
+\family typewriter
+\size small
+\color blue
+cnnode.java
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Standard
+Besides files that has already used in GBN and DV.
+ Here are a new:
+\end_layout
+
+\begin_layout Enumerate
+Link.java: here two endpoint on a link is no longer the same -- one is probe
+ sender and the other is probe receiver.
+ Besides, Class Link also stores link loss_rate as the loss_rate changed
+ from time to time.
+\end_layout
+
+\begin_layout Section
+Project feature
+\end_layout
+
+\begin_layout Enumerate
+Combine GBN and DV together.
+\end_layout
+
+\begin_layout Enumerate
+Using GBN protocol to probe the link weight.
+\end_layout
+
+\begin_layout Enumerate
+Using DV algorithm to update the link table.
+\end_layout
+
+\begin_layout Enumerate
+Print the link weight every one second.
+\end_layout
+
+\begin_layout Enumerate
+Print router table.
+\end_layout
+
+\begin_layout Section
+Data structure
+\end_layout
+
+\begin_layout Standard
+There are several subclasses in the main class CN.
+\end_layout
+
+\begin_layout Subsection
+UpdateRoutingTask
+\end_layout
+
+\begin_layout Standard
+class UpdateRoutingTask is used to update the link situation, using the
+ link situation to update the route table.
+ If table changed, send it to neighbours.
+\end_layout
+
+\begin_layout Standard
+A timer should be used to do this every 5 seconds.
+\end_layout
+
+\begin_layout Subsection
+PrintStatusTask
+\end_layout
+
+\begin_layout Standard
+We are required to print the link status every 1 second.
+ This task is used to do that.
+\end_layout
+
+\begin_layout Subsection
+GBNProbe
+\end_layout
+
+\begin_layout Standard
+This class is a thread, this thread only do one thing: send prob message
+ -- in more detail, it calls GBN.Send_Prob agiain and again.
+ The GBN sending algorithm is encapsulated in class GBN.
+\end_layout
+
+\begin_layout Section
+Algorithm
+\end_layout
+
+\begin_layout Subsection
+Sending probe message
+\end_layout
+
+\begin_layout Standard
+I use multithread in this project.
+ However, I did create a thread to each probe link, the reason is very firm,
+ thread comsumes too much CPU and memory.
+ Suppose there are 100 link for the node to send probe message, even PC
+ in CLIC can hardly deal with 100 busily sending thread.
+\end_layout
+
+\begin_layout Standard
+My solution is:
+\end_layout
+
+\begin_layout Itemize
+Using an array to realize many probe links -- 
+\family typewriter
+\size small
+\color blue
+GBN send_gbn[]
+\family default
+\size default
+\color inherit
+ in 
+\family typewriter
+\size small
+\color blue
+CN.java
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Itemize
+Using 
+\series bold
+for
+\series default
+ each 
+\family typewriter
+\size small
+\color blue
+send_gbn,
+\family default
+\size default
+\color inherit
+ do 
+\family typewriter
+\size small
+\color blue
+GBN.Send_Prob
+\family default
+\size default
+\color inherit
+.
+ As mentioned above, the GBN protocol is encapsulated in the class GBN.
+ Thereby, it easy for the outside to do it.
+\end_layout
+
+\begin_layout Standard
+In this way, I only use one thread to realize multi-link probe.
+\end_layout
+
+\begin_layout Subsection
+Update routing table
+\end_layout
+
+\begin_layout Standard
+See 
+\family typewriter
+\size small
+\color blue
+CN.UpdateTable()
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Standard
+This directly applies Bellman-Ford algorithm that:
+\end_layout
+
+\begin_layout Itemize
+Each 
+\begin_inset Formula $D_{self}\left(dest\right)$
+\end_inset
+
+ is to be checked.
+\end_layout
+
+\begin_layout Itemize
+If there exist a neighbour that pass by will reduce the total path weight.
+ Replace it.
+\end_layout
+
+\begin_layout Subsection
+Self update table from link
+\end_layout
+
+\begin_layout Standard
+Updating table is different from the previous project DV:
+\end_layout
+
+\begin_layout Enumerate
+Link weight is dynamic, it should be used to update the table rather than
+ merely used to do initialization as in project DV.
+\end_layout
+
+\begin_layout Enumerate
+Elements in routing table can increase.
+ In previous project DV, as link weight is static, elements in routing table
+ can only decrease.
+ Here, as the link weight increases.
+ The coorespondent elements in routing table might increase.
+\end_layout
+
+\begin_layout Standard
+See 
+\family typewriter
+\size small
+\color blue
+CN.UpdateLink()
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Itemize
+Get loss rate from each GBN (contain number of sent messages and number
+ of lost messages).
+\end_layout
+
+\begin_layout Itemize
+Update it to Link.
+\end_layout
+
+\begin_layout Itemize
+Call 
+\family typewriter
+\size small
+\color blue
+CN.UpdateTable()
+\family default
+\size default
+\color inherit
+.
+ This step is very important as the change of link will change the routing
+ table.
+\end_layout
+
+\begin_layout Subsection
+Update table through messages
+\end_layout
+
+\begin_layout Standard
+First a very important thing is that: there is a sender and a receiver on
+ each link.
+ The problem is the sender knows the link condition while the receiver does
+ not know it.
+ But the receiver should also have to change the link status.
+ Thereby, I make the update message contains link status.
+ Then those nodes who is a receiver can also update the link condition.
+\end_layout
+
+\begin_layout Standard
+Thereby when each node recieves a message, it will:
+\end_layout
+
+\begin_layout Itemize
+Update the link it there is.
+\end_layout
+
+\begin_layout Itemize
+Update the routing table.
+\end_layout
+
+\begin_layout Standard
+See 
+\family typewriter
+\size small
+\color blue
+Receiver.Update()
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Section
+Usage scenario
+\end_layout
+
+\begin_layout Standard
+With proper run command, after the 
+\begin_inset Quotes eld
+\end_inset
+
+last
+\begin_inset Quotes erd
+\end_inset
+
+ node starts, they first exchange messages.
+ Then probe starts and they print link status.
+ Every 5 seconds they exchange message again.
+\end_layout
+
+\begin_layout Section
+Test
+\end_layout
+
+\begin_layout Standard
+A test output is in folder 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+Test/
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+, this use the model given in the homework example.
+\end_layout
+
+\begin_layout Standard
+In detail:
+\end_layout
+
+\begin_layout Itemize
+file 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+1111
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+: the output of node whose port is 1111.
+\end_layout
+
+\begin_layout Itemize
+file 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+2222
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+: the output of node whose port is 2222.
+\end_layout
+
+\begin_layout Itemize
+file 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+3333
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+: the output of node whose port is 3333.
+\end_layout
+
+\begin_layout Itemize
+file 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+4444
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+: the output of node whose port is 4444.
+\end_layout
+
+\begin_layout Standard
+Fig 7-1 is shows at first they update routing table, each path is 0.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Test_InitialTable.png
+	scale 33
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Fig 7-1
+\end_layout
+
+\begin_layout Standard
+Fig 7-2 shows some link status at node 2222, the print rate is 1 second:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Test_LinkStatus.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Fig 7-2
+\end_layout
+
+\begin_layout Standard
+Fig 7-3 shows the routing table before I killed them, it is very close to
+ the input data:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Test_LastTable.png
+	scale 33
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Fig 7-3
+\end_layout
+
+\end_body
+\end_document

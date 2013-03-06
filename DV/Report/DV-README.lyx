@@ -1,0 +1,488 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass armenian-article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.3cm
+\topmargin 3cm
+\rightmargin 2.3cm
+\bottommargin 2cm
+\headheight 1cm
+\headsep 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\align center
+
+\series bold
+\size large
+CSEE W4119 Computer Networks - PA2
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\shape italic
+Li Yan(ly2278) ly2278@columbia.edu
+\end_layout
+
+\begin_layout Part*
+
+\size large
+Distance-Vector Routing Algorithm
+\end_layout
+
+\begin_layout Section
+Building intruction
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+cd src
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+make
+\end_layout
+
+\begin_layout Standard
+Then run java program.
+\end_layout
+
+\begin_layout Section
+Document detail
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+src/
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Accessory.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Constant.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+DV.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+dvnode.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Receiver.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Router.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+Transmission.java
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\size small
+\color blue
+makefile
+\end_layout
+
+\begin_layout Standard
+The the main function of the project is 
+\family typewriter
+\size small
+\color blue
+dvnode.java
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Section
+Project feature
+\end_layout
+
+\begin_layout Enumerate
+Applying Bellman Ford algorithm to the Distance-Vector Routing algorithm.
+\end_layout
+
+\begin_layout Enumerate
+Print node table when ever it is updated.
+\end_layout
+
+\begin_layout Enumerate
+Print the message sending and receiving condition.
+\end_layout
+
+\begin_layout Section
+Data structure
+\end_layout
+
+\begin_layout Standard
+In this project, each node is identified by its port number.
+ However, port number is not very suitable as the index of the routing table.
+ Thereby, each node have a map mapping other nodes' port number to a 
+\series bold
+router ID
+\series default
+.
+ Router ID is an integer start from 0 (0 represents itself).
+ Then using double[ID1][ID2] to represent the routing table from router
+ ID1 to router ID2.
+\end_layout
+
+\begin_layout Subsection
+Port to ID map
+\end_layout
+
+\begin_layout Standard
+This is instantiated by HashMap in Java, which is 
+\family typewriter
+\size small
+\color blue
+HashMap<Integer, Integer> port2routerIDHashMap
+\family default
+\size default
+\color inherit
+.
+ Its key is the port number, its value is relative router's ID.
+\end_layout
+
+\begin_layout Subsection
+ID to Port map
+\end_layout
+
+\begin_layout Standard
+This is instantiated by 
+\family typewriter
+\size small
+\color blue
+int routerID2port[]
+\family default
+\size default
+\color inherit
+.
+ router2port[i] gives the port of the router whose ID is i.
+\end_layout
+
+\begin_layout Subsection
+Routing Table
+\end_layout
+
+\begin_layout Standard
+This is the most important data structure, the routing table is stored in
+ 
+\family typewriter
+\size small
+\color blue
+double DV.data[][]
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout Subsection
+Link information
+\end_layout
+
+\begin_layout Standard
+Another important data structure is for link information, which stores all
+ routers that are neighbours and also stores link weight to this neighbour
+ router.
+ This is instantiated by HashMap<Integer, Double> linkHashMap.
+ Its key is peer router's port, this value is the link weight to this router.
+\end_layout
+
+\begin_layout Section
+Algorithm
+\end_layout
+
+\begin_layout Standard
+The main flowchart for DV is given in Fig 5-1:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename DV.png
+	scale 37
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Fig 5-1
+\end_layout
+
+\begin_layout Standard
+The receiver have the flowchart of Fig 5-2:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Receiver.png
+	scale 37
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Fig 5-2
+\end_layout
+
+\begin_layout Standard
+The receiver is run as a thread, the reason for this is that in the combination,
+ the main procecess will do many other jobs.
+\end_layout
+
+\begin_layout Section
+Usage scenario
+\end_layout
+
+\begin_layout Standard
+With proper run command, all dvnodes that is not the 
+\begin_inset Quotes eld
+\end_inset
+
+last
+\begin_inset Quotes erd
+\end_inset
+
+ listen to updates from their neighbours.
+ The node that is the 
+\begin_inset Quotes eld
+\end_inset
+
+last
+\begin_inset Quotes erd
+\end_inset
+
+ will update the table from its link condition and send out the first updates.
+ The each node will update tables and send out updates to its neighbours
+ until the table does not change any more.
+\end_layout
+
+\begin_layout Standard
+At last, the convergent condition is that each node have a table will have
+ the shorstest path and no more message sent.
+\end_layout
+
+\begin_layout Section
+Test
+\end_layout
+
+\begin_layout Standard
+A test output is in folder 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+Test/
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+, this use the model given in the homework example.
+\end_layout
+
+\begin_layout Standard
+In detail:
+\end_layout
+
+\begin_layout Itemize
+file 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+1111
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+: the output of node whose port is 1111.
+\end_layout
+
+\begin_layout Itemize
+file 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+2222
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+: the output of node whose port is 2222.
+\end_layout
+
+\begin_layout Itemize
+file 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+3333
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+: the output of node whose port is 3333.
+\end_layout
+
+\begin_layout Itemize
+file 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size small
+\color blue
+4444
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+: the output of node whose port is 4444.
+\end_layout
+
+\end_body
+\end_document

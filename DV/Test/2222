@@ -1,0 +1,22 @@
+[1355080518136] Message received at Node 2222 from Node 4444
+[1355080518139] Node 2222 Routing Table
+- (.8) -> Node 4444
+- (.1) -> Node 1111
+- (.2) -> Node 3333
+[1355080518151] Message sent from Node 2222 to Node 4444
+[1355080518158] Message sent from Node 2222 to Node 1111
+[1355080518158] Message sent from Node 2222 to Node 3333
+[1355080518159] Message received at Node 2222 from Node 4444
+[1355080518165] Message received at Node 2222 from Node 3333
+[1355080518167] Node 2222 Routing Table
+- (.7) -> Node 4444; Next hop -> Node 3333
+- (.1) -> Node 1111
+- (.2) -> Node 3333
+[1355080518169] Message sent from Node 2222 to Node 4444
+[1355080518169] Message sent from Node 2222 to Node 1111
+[1355080518170] Message sent from Node 2222 to Node 3333
+[1355080518170] Message received at Node 2222 from Node 4444
+[1355080518170] Message received at Node 2222 from Node 3333
+[1355080518171] Message received at Node 2222 from Node 4444
+[1355080518177] Message received at Node 2222 from Node 1111
+[1355080518185] Message received at Node 2222 from Node 1111
